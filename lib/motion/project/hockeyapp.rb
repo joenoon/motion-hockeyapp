@@ -61,9 +61,10 @@ if Object.const_defined?('BITHockeyManager') and !UIDevice.currentDevice.model.i
   class BITHockeyManagerLauncher
     
     def start
+      (@plist = NSBundle.mainBundle.objectForInfoDictionaryKey('HockeySDK')) && (@plist = @plist.first)
+      return unless @plist
       NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, object:nil, queue:nil, usingBlock:lambda do |notification|
-        plist = NSBundle.mainBundle.objectForInfoDictionaryKey('HockeySDK').first
-        BITHockeyManager.sharedHockeyManager.configureWithBetaIdentifier(plist['beta_id'], liveIdentifier:plist['live_id'], delegate:self)
+        BITHockeyManager.sharedHockeyManager.configureWithBetaIdentifier(@plist['beta_id'], liveIdentifier:@plist['live_id'], delegate:self)
         BITHockeyManager.sharedHockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend
         BITHockeyManager.sharedHockeyManager.startManager
       end)
@@ -100,9 +101,9 @@ module Motion; module Project; class Config
 
   def hockeyapp(&block)
     @hockeyapp ||= HockeyAppConfig.new(self)
-    @hockeyapp.instance_eval(&block)
+    @hockeyapp.instance_eval(&block) unless block.nil?
     @hockeyapp.configure!
-    nil
+    @hockeyapp
   end
 
   def hockeyapp?
