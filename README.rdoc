@@ -28,10 +28,10 @@ and be submitted to the HockeyApp platform.
       # ...
       app.development do
         if app.hockeyapp?
-          app.identifier = 'com.localini.Localini.adhoc'
+          app.identifier = 'com.your.App.adhoc'
           # ...
         else
-          app.identifier = 'com.localini.Localini.debug'
+          app.identifier = 'com.your.App.debug'
           # ...
         end
       end
