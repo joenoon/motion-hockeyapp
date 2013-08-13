@@ -17,23 +17,21 @@ and be submitted to the HockeyApp platform.
 
     Motion::Project::App.setup do |app|
       # ...
-      app.hockeyapp do
-        set :api_token, '2fc2d1b97ef24ec38a70a721c65956e2'
-        set :beta_id, '83be1abdfb3acd29c0e012a644e71b7d'
-        set :live_id, '90a35939241bd75d785e152d37aeb25b'
-        set :status, "2"
-        set :notify, "0"
-        set :notes_type, "1"
-      end
+      # app.development do
+      #   app.identifier = 'com.your.App.dev'
+      # end
       # ...
-      app.development do
-        if app.hockeyapp?
-          app.identifier = 'com.your.App.adhoc'
-          # ...
-        else
-          app.identifier = 'com.your.App.debug'
-          # ...
+      if app.hockeyapp?
+        app.hockeyapp do
+          set :api_token, '2fc2d1b97ef24ec38a70a721c65956e2'
+          set :beta_id, '83be1abdfb3acd29c0e012a644e71b7d'
+          set :live_id, '90a35939241bd75d785e152d37aeb25b'
+          set :status, "2"
+          set :notify, "0"
+          set :notes_type, "1"
         end
+        # optional: do other config changes when in hockeyapp mode
+        # app.identifier = 'com.your.App.hockeyapp'
       end
       # ...
     end
@@ -41,11 +39,63 @@ and be submitted to the HockeyApp platform.
    You can retrieve the values in your HockeyApp account page.
    Refer to http://support.hockeyapp.net/kb/api/api-upload-new-apps for Upload API options.
 
+   in app_delegate.rb :
+
+      def application(application, didFinishLaunchingWithOptions:launchOptions)
+        # ...
+        BITHockeyManagerLauncher.new.start
+        # ...
+      end
+
+      or, more advanced...
+    
+      def application(application, didFinishLaunchingWithOptions:launchOptions)
+        # ...
+        if BITHockeyManagerLauncher.new.start { # execute this code before 'BITHockeyManager.sharedHockeyManager.startManager' is called }
+          if BITHockeyManager.sharedHockeyManager.crashManager.didCrashInLastSession
+            # maybe you need to do some cleanup after a crash
+          end
+        end
+        # ...
+      end
+
+  if you want to implement the BITCrashManagerDelegate, create a file opening the BITHockeyManagerLauncher
+  class and add your delegate methods.  for example:
+
+      class BITHockeyManagerLauncher
+
+        def applicationLogForCrashManager(crashManager)
+          # ...
+        end
+
+        def shouldUseLiveIdentifierForHockeyManager(hockeyManager)
+          # ...
+        end
+
+        def userIDForHockeyManager(hockeyManager, componentManager:componentManager)
+          # ...
+        end
+
+        def userNameForHockeyManager(hockeyManager, componentManager:componentManager)
+          # ...
+        end
+
+        def userEmailForHockeyManager(hockeyManager, componentManager:componentManager)
+          # ...
+        end
+
+      end
+
+
 == Usage
 
 motion-hockeyapp introduces a +hockeyapp+ Rake task to your project, which can be used to submit a development build. The +notes+ parameter may be provided, and its content will be used as the submission release notes.
 
   $ rake hockeyapp notes="zomg!"
+
+or build in hockeyapp mode and try to deploy it to your device, but skip uploading it to hockeyapp:
+
+  $ rake hockeyapp:build
 
 == License
 
