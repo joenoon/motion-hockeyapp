@@ -1,3 +1,8 @@
+if Object.const_defined?('BITHockeyManager')
+  # force loading of BITCrashManagerStatusAutoSend
+  BITCrashManagerStatusAutoSend
+end
+
 class BITHockeyManagerLauncher
   
   def start(&block)
@@ -6,7 +11,7 @@ class BITHockeyManagerLauncher
     return unless @plist
     BITHockeyManager.sharedHockeyManager.configureWithBetaIdentifier(@plist['beta_id'], liveIdentifier:@plist['live_id'], delegate:self)
 
-    BITHockeyManager.sharedHockeyManager.crashManager.crashManagerStatus = ::BITCrashManagerStatusAutoSend
+    BITHockeyManager.sharedHockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend
     block.call if !block.nil?
     BITHockeyManager.sharedHockeyManager.startManager
     true

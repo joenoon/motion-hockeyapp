@@ -75,10 +75,10 @@ module Motion; module Project; class Config
 end; end; end
 
 Motion::Project::App.setup do |app|
+  app.files.push(File.join(File.dirname(__FILE__), "launcher.rb"))
   if Motion::Project::App.config_mode == :development
-    app.files.unshift(File.join(File.dirname(__FILE__), "launcher-deviceid.rb"))
+    app.files.push(File.join(File.dirname(__FILE__), "launcher-deviceid.rb"))
   end
-  app.files.unshift(File.join(File.dirname(__FILE__), "launcher.rb"))
 end
 
 namespace 'hockeyapp' do
