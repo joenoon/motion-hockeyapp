@@ -1,9 +1,8 @@
-if Object.const_defined?('BITHockeyManager')
-  # force loading of BITCrashManagerStatusAutoSend
-  BITCrashManagerStatusAutoSend
-end
-
 class BITHockeyManagerLauncher
+
+  BITCrashManagerStatusDisabled = 0
+  BITCrashManagerStatusAlwaysAsk = 1
+  BITCrashManagerStatusAutoSend = 2
   
   def start(&block)
     return if !Object.const_defined?('BITHockeyManager') || UIDevice.currentDevice.model.include?('Simulator')
