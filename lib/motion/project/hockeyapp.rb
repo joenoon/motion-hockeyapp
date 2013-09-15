@@ -41,7 +41,7 @@ class HockeyAppConfig
   end
 
   def inspect
-    {:api_token => api_token, :beta_id => beta_id, :live_id => live_id, :status => status, :notify => notify, :notes_type => notes_type, :always_show_update_reminder => always_show_update_reminder}.inspect
+    {:api_token => api_token, :beta_id => beta_id, :live_id => live_id, :status => status, :notify => notify, :notes_type => notes_type}.inspect
   end
 
   def configure!
