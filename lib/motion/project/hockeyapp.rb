@@ -1,15 +1,15 @@
 # Copyright (c) 2012, Joe Noon <joenoon@gmail.com>
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright notice,
 #    this list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@ unless defined?(Motion::Project::Config)
 end
 
 class HockeyAppConfig
-  
+
   attr_accessor :api_token, :beta_id, :live_id, :status, :notify, :notes_type
 
   def set(var, val)
@@ -76,7 +76,7 @@ end; end; end
 
 Motion::Project::App.setup do |app|
   app.files.push(File.join(File.dirname(__FILE__), "launcher.rb"))
-  if Motion::Project::App.config_mode == :development
+  if ENV['track'] == 'true' || ENV['track'] == '1'
     app.files.push(File.join(File.dirname(__FILE__), "launcher-deviceid.rb"))
   end
 end
@@ -93,7 +93,7 @@ namespace 'hockeyapp' do
     App.fail "A value for app.hockeyapp.api_token is mandatory" unless prefs.api_token
     notes = ENV['notes'].to_s
 
-    Rake::Task["archive"].invoke
+    Rake::Task["archive#{App.config_mode == :release ? ':distribution' : ''}"].invoke
 
     # An archived version of the .dSYM bundle is needed.
     app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
