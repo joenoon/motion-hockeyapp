@@ -76,9 +76,6 @@ end; end; end
 
 Motion::Project::App.setup do |app|
   app.files.push(File.join(File.dirname(__FILE__), "launcher.rb"))
-  if Motion::Project::App.config_mode == :development
-    app.files.push(File.join(File.dirname(__FILE__), "launcher-deviceid.rb"))
-  end
 end
 
 namespace 'hockeyapp' do
