@@ -1,3 +1,10 @@
+## 1.1.3
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.2...v1.1.3)
+
+* no longer implements delegate #customDeviceIdentifierForUpdateManager. if
+  you want to implement it, add your own implementation  to BITHockeyManagerLauncher
+
 ## 1.1.2
 
 [Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.1...v1.1.2)
