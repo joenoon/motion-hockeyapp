@@ -1,3 +1,9 @@
+## 1.1.4
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.3...v1.1.4)
+
+* set the updateManager delegate
+
 ## 1.1.3
 
 [Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.2...v1.1.3)
