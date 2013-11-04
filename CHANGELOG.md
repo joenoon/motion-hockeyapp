@@ -1,3 +1,9 @@
+## 1.1.5
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.4...v1.1.5)
+
+* change the way external commands are run, handle env vars with multilines better
+
 ## 1.1.4
 
 [Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.3...v1.1.4)
