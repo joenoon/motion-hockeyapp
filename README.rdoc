@@ -91,7 +91,7 @@ and be submitted to the HockeyApp platform.
 
 motion-hockeyapp introduces a +hockeyapp+ Rake task to your project, which can be used to submit a development build. The +notes+ parameter may be provided, and its content will be used as the submission release notes.
 
-  $ rake hockeyapp notes="zomg!"
+  $ notes="release notes here" rake hockeyapp
 
 or build in hockeyapp mode and try to deploy it to your device, but skip uploading it to hockeyapp:
 

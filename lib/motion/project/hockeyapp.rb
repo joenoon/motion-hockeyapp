@@ -88,7 +88,6 @@ namespace 'hockeyapp' do
     prefs = App.config.hockeyapp
 
     App.fail "A value for app.hockeyapp.api_token is mandatory" unless prefs.api_token
-    notes = ENV['notes'].to_s
 
     Rake::Task["archive"].invoke
 
@@ -96,9 +95,10 @@ namespace 'hockeyapp' do
     app_dsym = App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
     app_dsym_zip = app_dsym + '.zip'
     if !File.exist?(app_dsym_zip) or File.mtime(app_dsym) > File.mtime(app_dsym_zip)
-      p app_dsym
       Dir.chdir(File.dirname(app_dsym)) do
-        sh "/usr/bin/zip -q -r \"#{File.basename(app_dsym)}.zip\" \"#{File.basename(app_dsym)}\""
+        args = "/usr/bin/zip", "-q", "-r", "#{File.basename(app_dsym)}.zip", File.basename(app_dsym)
+        App.info 'Run', args.join(" ")
+        system(*args)
       end
     end
 
@@ -106,10 +106,19 @@ namespace 'hockeyapp' do
     prefs.notify ||= "0"
     prefs.notes_type ||= "1"
 
-    curl = %Q{/usr/bin/curl https://rink.hockeyapp.net/api/2/apps -F "status=#{prefs.status}" -F "notify=#{prefs.notify}" -F "notes=#{notes}" -F "notes_type=#{prefs.notes_type}" -F "ipa=@#{App.config.archive}" -F "dsym=@#{app_dsym_zip}" -H "X-HockeyAppToken: #{prefs.api_token}"}
+    cmd = %Q{/usr/bin/curl "https://rink.hockeyapp.net/api/2/apps" -F status="$status" -F notify="$notify" -F notes="$notes" -F notes_type="$notes_type" -F ipa="$ipa" -F dsym="$dsym" -H "$header"}
 
-    App.info 'Run', curl
-    sh curl
+    env = {
+      "notes" => ENV['notes'].to_s,
+      "status" => prefs.status.to_s,
+      "notify" => prefs.notify.to_s,
+      "notes_type" => prefs.notes_type.to_s,
+      "ipa" => "@#{App.config.archive}",
+      "dsym" => "@#{app_dsym_zip}",
+      "header" => "X-HockeyAppToken: #{prefs.api_token}"
+    }
+    App.info 'Run', "#{env.inspect} #{cmd}"
+    system(env, cmd)
   end
 
   desc "Records if the device build is created in hockeyapp mode, so some things can be cleaned up between mode switches"
