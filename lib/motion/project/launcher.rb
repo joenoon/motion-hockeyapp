@@ -9,7 +9,6 @@ class BITHockeyManagerLauncher
     (@plist = NSBundle.mainBundle.objectForInfoDictionaryKey('HockeySDK')) && (@plist = @plist.first)
     return unless @plist
     BITHockeyManager.sharedHockeyManager.configureWithBetaIdentifier(@plist['beta_id'], liveIdentifier:@plist['live_id'], delegate:self)
-
     BITHockeyManager.sharedHockeyManager.crashManager.crashManagerStatus = BITCrashManagerStatusAutoSend
     block.call if !block.nil?
     BITHockeyManager.sharedHockeyManager.startManager

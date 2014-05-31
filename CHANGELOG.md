@@ -1,3 +1,22 @@
+## 1.1.5
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.4...v1.1.5)
+
+* change the way external commands are run, handle env vars with multilines better
+
+## 1.1.4
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.3...v1.1.4)
+
+* set the updateManager delegate
+
+## 1.1.3
+
+[Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.2...v1.1.3)
+
+* no longer implements delegate #customDeviceIdentifierForUpdateManager. if
+  you want to implement it, add your own implementation  to BITHockeyManagerLauncher
+
 ## 1.1.2
 
 [Commit history](https://github.com/joenoon/motion-hockeyapp/compare/v1.1.1...v1.1.2)
