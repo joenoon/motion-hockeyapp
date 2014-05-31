@@ -28,7 +28,7 @@ end
 
 class HockeyAppConfig
 
-  attr_accessor :api_token, :beta_id, :live_id, :status, :notify, :notes_type
+  attr_accessor :api_token, :beta_id, :live_id, :status, :notify, :notes_type, :is_cocoapod
 
   def set(var, val)
     @config.info_plist['HockeySDK'] ||= [{}]
@@ -46,9 +46,11 @@ class HockeyAppConfig
 
   def configure!
     @configured ||= begin
-      @config.vendor_project('vendor/HockeySDK/HockeySDK.framework', :static, products: ['HockeySDK'], headers_dir: 'Headers')
-      @config.resources_dirs += [ './vendor/HockeySDK/Resources' ]
-      @config.frameworks += [ 'HockeySDK' ]
+      unless is_cocoapod
+        @config.vendor_project('vendor/HockeySDK/HockeySDK.framework', :static, products: ['HockeySDK'], headers_dir: 'Headers')
+        @config.resources_dirs += [ './vendor/HockeySDK/Resources' ]
+        @config.frameworks += [ 'HockeySDK' ]
+      end
       true
     end
   end
