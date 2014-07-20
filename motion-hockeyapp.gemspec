@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-Version = "1.1.6"
+Version = "1.1.7"
 
 Gem::Specification.new do |spec|
   spec.name = 'motion-hockeyapp'
