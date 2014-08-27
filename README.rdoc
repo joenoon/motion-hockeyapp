@@ -11,6 +11,8 @@ and be submitted to the HockeyApp platform.
   
   vendor/HockeySDK/HockeySDK.framework
   vendor/HockeySDK/Resources
+  
+  or use the `is_cocoapod: true` flag in setup if the SDK is installed from cocoapods.
 
 
 == Setup
@@ -29,6 +31,7 @@ and be submitted to the HockeyApp platform.
           set :status, "2"
           set :notify, "0"
           set :notes_type, "1"
+          set is_cocoapod: true
         end
         # optional: do other config changes when in hockeyapp mode
         # app.identifier = 'com.your.App.hockeyapp'
