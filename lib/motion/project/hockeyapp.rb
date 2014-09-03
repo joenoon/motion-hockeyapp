@@ -44,37 +44,42 @@ class HockeyAppConfig
     {:api_token => api_token, :beta_id => beta_id, :live_id => live_id, :status => status, :notify => notify, :notes_type => notes_type}.inspect
   end
 
-  def configure!
-    @configured ||= begin
-      @config.vendor_project('vendor/HockeySDK/HockeySDK.framework', :static, products: ['HockeySDK'], headers_dir: 'Headers')
-      @config.resources_dirs += [ './vendor/HockeySDK/Resources' ]
-      @config.frameworks += [ 'HockeySDK' ]
-      true
+end
+
+module Motion
+  module Project
+    class Config
+
+      attr_accessor :hockeyapp_mode
+
+      variable :hockeyapp
+
+      def hockeyapp(&block)
+        @hockeyapp ||= HockeyAppConfig.new(self)
+        @hockeyapp.instance_eval(&block) unless block.nil?
+        @hockeyapp
+      end
+
+      def hockeyapp?
+        @hockeyapp_mode == true
+      end
+
+    end
+  end
+end
+
+Motion::Project::App.setup do |app|
+
+  app.pods do
+    pod "HockeySDK", "~> 3.5"
+  end
+
+  Dir.glob(File.join(File.dirname(__FILE__), '**/*.rb')).each do |file|
+    if app.respond_to?("exclude_from_detect_dependencies")
+      app.exclude_from_detect_dependencies << file
     end
   end
 
-end
-
-module Motion; module Project; class Config
-
-  attr_accessor :hockeyapp_mode
-
-  variable :hockeyapp
-
-  def hockeyapp(&block)
-    @hockeyapp ||= HockeyAppConfig.new(self)
-    @hockeyapp.instance_eval(&block) unless block.nil?
-    @hockeyapp.configure!
-    @hockeyapp
-  end
-
-  def hockeyapp?
-    @hockeyapp_mode == true
-  end
-
-end; end; end
-
-Motion::Project::App.setup do |app|
   app.files.push(File.join(File.dirname(__FILE__), "launcher.rb"))
 end
 
@@ -89,7 +94,7 @@ namespace 'hockeyapp' do
 
     App.fail "A value for app.hockeyapp.api_token is mandatory" unless prefs.api_token
 
-    Rake::Task["archive"].invoke
+    Rake::Task[App.config_mode == :release ? "archive:distribution" : "archive"].invoke
 
     # An archived version of the .dSYM bundle is needed.
     app_dsym = if App.config.respond_to?(:app_bundle_dsym)

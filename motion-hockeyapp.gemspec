@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-Version = "1.1.7"
+Version = "1.2.0"
 
 Gem::Specification.new do |spec|
   spec.name = 'motion-hockeyapp'
@@ -16,4 +16,5 @@ Gem::Specification.new do |spec|
   files << 'LICENSE'
   files.concat(Dir.glob('lib/**/*.rb'))
   spec.files = files
+  spec.add_dependency "motion-cocoapods", ">= 1.4.1"
 end
