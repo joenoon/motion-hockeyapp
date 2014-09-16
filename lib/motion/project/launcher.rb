@@ -5,7 +5,7 @@ class BITHockeyManagerLauncher
   BITCrashManagerStatusAutoSend = 2
   
   def start(&block)
-    return if !Object.const_defined?('BITHockeyManager') || UIDevice.currentDevice.model.include?('Simulator')
+    return if !Object.const_defined?('BITHockeyManager') || (Kernel.const_defined?(:UIApplication) && UIDevice.currentDevice.model.include?('Simulator'))
     (@plist = NSBundle.mainBundle.objectForInfoDictionaryKey('HockeySDK')) && (@plist = @plist.first)
     return unless @plist
     #Retain self since BITHockeyManager keeps a weak reference and app code typically don't retain the BITHockeyManagerLauncher instance. No worry about memory leak since this instance should last for the duration of the app's lifetime.
