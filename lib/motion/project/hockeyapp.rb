@@ -71,7 +71,11 @@ end
 Motion::Project::App.setup do |app|
 
   app.pods do
-    pod "HockeySDK", "~> 3.5"
+    if app.deploy_platform == 'MacOSX'
+      pod 'HockeySDK-Mac', '~> 2.1'
+    else
+      pod "HockeySDK", "~> 3.5"
+    end
   end
 
   Dir.glob(File.join(File.dirname(__FILE__), '**/*.rb')).each do |file|
@@ -95,12 +99,13 @@ namespace 'hockeyapp' do
     App.fail "A value for app.hockeyapp.api_token is mandatory" unless prefs.api_token
 
     Rake::Task[App.config_mode == :release ? "archive:distribution" : "archive"].invoke
+    platform = App.config.deploy_platform
 
     # An archived version of the .dSYM bundle is needed.
     app_dsym = if App.config.respond_to?(:app_bundle_dsym)
-      App.config.app_bundle_dsym('iPhoneOS')
+      App.config.app_bundle_dsym(platform)
     else
-      App.config.app_bundle('iPhoneOS').sub(/\.app$/, '.dSYM')
+      App.config.app_bundle(platform).sub(/\.app$/, '.dSYM')
     end
     app_dsym_zip = app_dsym + '.zip'
     if !File.exist?(app_dsym_zip) or File.mtime(app_dsym) > File.mtime(app_dsym_zip)
@@ -134,7 +139,7 @@ namespace 'hockeyapp' do
   task :record_mode do
     hockeyapp_mode = App.config_without_setup.hockeyapp_mode ? "True" : "False"
 
-    platform = 'iPhoneOS'
+    platform = App.config.deploy_platform
     bundle_path = App.config.app_bundle(platform)
     build_dir = File.join(App.config.versionized_build_dir(platform))
     FileUtils.mkdir_p(build_dir)
