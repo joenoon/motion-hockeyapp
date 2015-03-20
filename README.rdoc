@@ -6,6 +6,12 @@ and be submitted to the HockeyApp platform.
 == Installation
 
   gem 'motion-hockeyapp'
+  
+Install the HockeySDK cocoapod via:
+  
+  $ bundle exec rake pod:install
+  
+
 
 == Setup
 
